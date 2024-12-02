@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ws-organization-management
+  namespace: dev
+spec:
+  template:
+    metadata:
+      name: ws-organization-management
+      namespace: dev
+      labels:
+        app: ws-organization-management-backend
+    spec:
+      serviceAccountName: org-mngmnt-ws
+      containers:
+        - name: organization-management-backend
+          livenessProbe:
+            httpGet:
+              path: /actuator/health/liveness
+              port: 8080
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /actuator/health/readiness
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          image: orgmngmntws:v1.0.0
+          env:
+            - name: ZIPKIN_ENDPOINT
+              value: http://zipkin.zipkin.svc.cluster.local:9411/api/v2/spans
+            - name: RABBITMQ_USERNAME
+              value: admin
+            - name: RABBITMQ_PASSWORD
+              value: dev
+            - name: RABBITMQ_HOST
+              value: dev-rabbitmq.rabbitmq.svc.cluster.local
+            - name: RABBITMQ_PORT
+              value: '5672'
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+  selector:
+    matchLabels:
+      app: ws-organization-management-backend
