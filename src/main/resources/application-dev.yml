@@ -1,0 +1,48 @@
+server:
+  port: 9090
+
+spring:
+  application:
+    name: ws-organization-management
+
+  cloud:
+    kubernetes:
+      discovery:
+        all-namespaces: true
+
+  rabbitmq:
+    username: admin
+    password: dev
+    host: localhost
+    port: 5672
+
+management:
+  metrics:
+    distribution:
+      percentiles-histogram:
+        http:
+          server:
+            requests: true
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      probes:
+        enabled: true
+        add-additional-paths: true
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+
+interactive:
+  topic-exchange: 'app.updates'
+  queue-name: 'upd'
+  routing-key: 'updates.#'
