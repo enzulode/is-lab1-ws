@@ -43,6 +43,6 @@ logging:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 interactive:
-  topic-exchange: 'app.updates'
+  exchange: 'app.updates'
   queue-name: 'upd'
   routing-key: 'updates.#'
