@@ -29,6 +29,10 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+repositories {
+    maven { url = uri("https://repo.spring.io/milestone") }
+}
+
 tasks.withType<Test>().configureEach {
     useJUnitPlatform()
     testLogging.events("PASSED", "SKIPPED", "FAILED")
